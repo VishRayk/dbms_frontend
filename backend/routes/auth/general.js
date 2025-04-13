@@ -87,6 +87,7 @@ const facultyAuth = (db)=>{
     router.post("/signup" , async (req, res) => {
         try{
         const { f_name , f_email , f_password  , department  , phone} = req.body;
+        console.log(f_name)
         const hashedPassword = await bcrypt.hash(f_password, 10);
 
         const [found] = await db.query("SELECT * FROM faculty WHERE femail = ?", [f_email]);
