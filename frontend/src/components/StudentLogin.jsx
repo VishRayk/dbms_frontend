@@ -30,8 +30,8 @@ export default function StudentLogin() {
         formData
       );
       setMessage(response.data.message); // Show the response message
-
       localStorage.setItem("token", response.data.token); // Store the token in localStorage
+      localStorage.setItem('theme', 'green-orange'); // or any custom identifier
 
       // Redirect to schedule-appointment page after successful login
       navigate('/schedule-appointment');

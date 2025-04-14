@@ -11,6 +11,8 @@ function CombinedLogin() {
   const handleRoleSelect = (selectedRole) => {
     setRole(selectedRole);
     setError('');
+    const token = localStorage.getItem('token')
+    
     navigate(`/${selectedRole}-login`);  // Redirect to selected role's login page
   };
 
@@ -26,6 +28,7 @@ function CombinedLogin() {
     try {
       const response = await axios.post(`http://localhost:3000/auth/${role}/login`, formData);
       localStorage.setItem('token', response.data.token);
+      
       alert('Login successful!');
       // Redirect to the appointment scheduling page after successful login
       navigate('/schedule-appointment');  // Redirect here

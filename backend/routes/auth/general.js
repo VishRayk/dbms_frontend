@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
+import { stringify } from "querystring";
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -131,60 +132,71 @@ const facultyAuth = (db)=>{
     return router;
 }
 
-const adminstaffAuth = (db)=>{
+const adminstaffAuth = (db) => {
     const router = Router();
-    router.post("/signup" , async (req, res) => {
-        try{
-        const {w_name , w_email , w_password    , phone} = req.body;
-        const hashedPassword = await bcrypt.hash(w_password, 10);
+    router.post("/signup", async (req, res) => {
+        try {
+            const { w_name, w_email, w_password, phone } = req.body;
+            const hashedPassword = await bcrypt.hash(w_password, 10);
 
-        const [found] = await db.query("SELECT * FROM adminstaff WHERE email = ?", [w_email]);
-        if (found[0]) {
-            return res.status(400).json({ message: "Email already exists" });
-    }
-        const [result] = await db.query("INSERT INTO adminstaff (name , email , password , phone) VALUES (?,?,?,?)", [ w_name, w_email, hashedPassword, phone]);  
-        const [[{ wid: newWid }]] = await db.query(
-            "SELECT wid FROM adminstaff WHERE wid = LAST_INSERT_ID()"
-        );
-        
-        await db.query(
-            "INSERT INTO members (member_id, member_type, email) VALUES (?,?,?)",
-            [newWid, "adminstaff", w_email]
-        );
-        res.json({ message: "Administrative Staff created successfully" });
-}
-    catch(error){
-        console.error(error);
-        res.status(500).json({ message: "Error creating administrative staff" });
-    }
-    
-    })
+            const [found] = await db.query("SELECT * FROM adminstaff WHERE email = ?", [w_email]);
+            if (found[0]) {
+                return res.status(400).json({ message: "Email already exists" });
+            }
 
+            const [result] = await db.query("INSERT INTO adminstaff (name, email, password, phone) VALUES (?,?,?,?)", [w_name, w_email, hashedPassword, phone]);
+            let newWid = result.insertId+1;  // Get the auto-incremented ID of the newly inserted admin staff
+
+            let memberId = `W${newWid}`; // Use `let` instead of `const` so that memberId can be reassigned
+
+            // Check if the generated memberId already exists in the members table
+            let [existingMember] = await db.query("SELECT * FROM members WHERE member_id = ?", [memberId]);
+            
+            // If the memberId exists, find the next available unique member_id
+            while (existingMember.length > 0) {
+                newWid++;  // Increment the wid
+                memberId = `W${newWid}`; // Generate a new unique member_id
+                [existingMember] = await db.query("SELECT * FROM members WHERE member_id = ?", [memberId]);
+            }
+
+            // Now insert into the members table with the unique member_id
+            await db.query(
+                "INSERT INTO members (member_id, member_type, email) VALUES (?,?,?)",
+                [memberId, "adminstaff", w_email]
+            );
+
+            res.json({ message: "Administrative Staff created successfully" });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: "Error creating administrative staff" });
+        }
+    });
 
     router.post("/login", async (req, res) => {
         try {
             const { w_email, w_password } = req.body;
-    
+
             const [admin] = await db.query("SELECT * FROM adminstaff WHERE email = ?", [w_email]);
             if (!admin) {
                 return res.status(401).json({ message: "Invalid email or password" });
             }
-    
+
             const isMatch = await bcrypt.compare(w_password, admin[0].password);
             if (!isMatch) {
                 return res.status(401).json({ message: "Invalid email or password" });
             }
-    
+
             const token = jwt.sign({ wid: admin[0].wid }, process.env.JWT_SECRET, { expiresIn: "24h" });
-    
+
             res.status(201).json({ message: "Logged in successfully", token });
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: "Error logging in admin" });
         }
     });
-    
 
     return router;
 }
+
+
 export { studentAuth, facultyAuth, adminstaffAuth};

@@ -25,9 +25,10 @@ const AdminLogin = () => {
       console.log(res)
       setMessage(res.data.message);
       localStorage.setItem("token", res.data.token);
+      setTimeout(() => navigate("/schedule-appointment"), 1000);
       // setTimeout(() => navigate("/admin/dashboard"), 2000); // Redirect to dashboard after login
     } catch (err) {
-      setMessage(err.res?.data?.message || "Login failed react");
+      setMessage(err.response?.data?.message || "Login failed react");
     }
   };
 

@@ -3,7 +3,7 @@ import './App.css';
 
 import VisitorForm from './components/VisitorForm.jsx';
 import VisitorList from './components/VisitorList.jsx';
-import StudentLogin from './components/StudentLogin.jsx'; 
+import StudentLogin from './components/StudentLogin.jsx';
 import StudentSignup from './components/StudentSignup.jsx';
 
 import Navigation from './components/Navigation.jsx';
@@ -11,11 +11,20 @@ import FacultyLogin from './components/FacultyLogin.jsx';
 import FacultySignup from './components/FacultySignup.jsx';
 import AdminSignup from './components/AdminSignup.jsx';
 import AdminLogin from './components/AdminLogin.jsx';
-import CombinedLogin from './components/CombinedLogin';
+import CombinedLogin from './components/CombinedLogin.jsx';
 
-import ScheduleAppointment from './components/ScheduleAppointment';
+import ScheduleAppointment from './components/ScheduleAppointment.jsx';
 
 function App() {
+  // Get theme from localStorage, default to 'default'
+  const theme = localStorage.getItem('theme') || 'default';
+
+  // Assign Tailwind classes based on theme
+  let themeClass = 'bg-white'; // default theme
+  if (theme === 'green-orange') {
+    themeClass = 'bg-gradient-to-br from-green-500 to-yellow-100';
+  }
+
   return (
     <Router>
       <div className="min-h-screen flex bg-gray-100 font-sans">
@@ -27,24 +36,23 @@ function App() {
 
         {/* Main Content */}
         <main className="flex-1 p-6">
-          <div className="bg-white rounded-2xl shadow p-8 min-h-[80vh]">
+          <div className={`${themeClass} rounded-2xl shadow p-8 min-h-[80vh]`}>
             <Routes>
-              <Route path="/visitor-form" element={<VisitorForm />} />
-              {/* <Route path="/visitor-list" element={<VisitorList />} /> */}
-             
-              <Route path="/student-signup" element={<StudentSignup />} />
-              <Route path="/student-login" element={<StudentLogin />} />
-              <Route path="/faculty-login" element={<FacultyLogin/>}/>
-              <Route path="/faculty-signup" element={<FacultySignup/>}/>
-              <Route path="/admin-signup" element={<AdminSignup/>}/>
-              <Route path="/admin-login" element={<AdminLogin/>}/>
-              <Route path="/login" element={<CombinedLogin />} />
-              <Route path="/schedule-appointment" element={<ScheduleAppointment />} />
               <Route path="/" element={
                 <div className="text-3xl font-semibold text-center text-gray-700">
                   Welcome to the <span className="text-blue-500">Home Page</span>!
                 </div>
               } />
+              <Route path="/visitor-form" element={<VisitorForm />} />
+              {/* <Route path="/visitor-list" element={<VisitorList />} /> */}
+              <Route path="/student-signup" element={<StudentSignup />} />
+              <Route path="/student-login" element={<StudentLogin />} />
+              <Route path="/faculty-login" element={<FacultyLogin />} />
+              <Route path="/faculty-signup" element={<FacultySignup />} />
+              <Route path="/admin-signup" element={<AdminSignup />} />
+              <Route path="/admin-login" element={<AdminLogin />} />
+              <Route path="/login" element={<CombinedLogin />} />
+              <Route path="/schedule-appointment" element={<ScheduleAppointment />} />
             </Routes>
           </div>
         </main>

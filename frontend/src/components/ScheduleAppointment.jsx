@@ -32,9 +32,12 @@ function ScheduleAppointment() {
       setMessage(error.response?.data?.message || 'Error scheduling appointment.');
     }
   };
+  const theme = localStorage.getItem('theme') || 'white';
 
+  // Create a dynamic class for background color based on the theme
+  const th = `max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg`;
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
+    <div className={th}>
       <h2 className="text-2xl font-semibold mb-4 text-center">Schedule an Appointment</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
