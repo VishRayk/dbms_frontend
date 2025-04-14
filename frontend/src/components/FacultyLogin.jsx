@@ -7,6 +7,8 @@ const FacultyLogin = () => {
     f_email: "",
     f_password: ""
   });
+
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -15,14 +17,16 @@ const FacultyLogin = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setMessage(""); // Clear previous messages
+
     try {
       const res = await axios.post("http://localhost:3000/auth/faculty/login", credentials);
-      alert(res.data.message);
-      localStorage.setItem("token", response.data.token);
-    //   navigate("/home"); // Adjust path as needed after successful login
+      setMessage(res.data.message); // Show success message
+      localStorage.setItem("token", res.data.token);
+      setTimeout(() => navigate("/schedule-appointment"), 1000); // Redirect after short delay
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.message || "Login failed");
+      setMessage(err.response?.data?.message || "Login failed");
     }
   };
 
@@ -33,6 +37,11 @@ const FacultyLogin = () => {
         className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-lg"
       >
         <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">Faculty Login</h2>
+
+        {message && (
+          <div className="mb-4 text-sm text-center text-red-600">{message}</div>
+        )}
+
         <input
           name="f_email"
           placeholder="Email"

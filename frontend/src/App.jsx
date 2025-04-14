@@ -11,6 +11,9 @@ import FacultyLogin from './components/FacultyLogin.jsx';
 import FacultySignup from './components/FacultySignup.jsx';
 import AdminSignup from './components/AdminSignup.jsx';
 import AdminLogin from './components/AdminLogin.jsx';
+import CombinedLogin from './components/CombinedLogin';
+
+import ScheduleAppointment from './components/ScheduleAppointment';
 
 function App() {
   return (
@@ -30,11 +33,13 @@ function App() {
               {/* <Route path="/visitor-list" element={<VisitorList />} /> */}
              
               <Route path="/student-signup" element={<StudentSignup />} />
-              <Route path="/student-login" element={<StudentLogin />} />  {/* Add this line */}
+              <Route path="/student-login" element={<StudentLogin />} />
               <Route path="/faculty-login" element={<FacultyLogin/>}/>
               <Route path="/faculty-signup" element={<FacultySignup/>}/>
               <Route path="/admin-signup" element={<AdminSignup/>}/>
               <Route path="/admin-login" element={<AdminLogin/>}/>
+              <Route path="/login" element={<CombinedLogin />} />
+              <Route path="/schedule-appointment" element={<ScheduleAppointment />} />
               <Route path="/" element={
                 <div className="text-3xl font-semibold text-center text-gray-700">
                   Welcome to the <span className="text-blue-500">Home Page</span>!

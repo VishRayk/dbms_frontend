@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import StudentSignup from "./StudentSignup"; // Import the signup component
 
 export default function StudentLogin() {
@@ -10,6 +11,7 @@ export default function StudentLogin() {
 
   const [message, setMessage] = useState("");
   const [isSignup, setIsSignup] = useState(false); // To toggle between login and signup
+  const navigate = useNavigate(); // Initialize navigate
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -20,18 +22,21 @@ export default function StudentLogin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("");
+    setMessage(""); // Clear previous message
 
     try {
       const response = await axios.post(
         "http://localhost:3000/auth/student/login",
         formData
       );
-      setMessage(response.data.message);
-      localStorage.setItem("token", response.data.token);
-      // Redirect or show success message
+      setMessage(response.data.message); // Show the response message
+
+      localStorage.setItem("token", response.data.token); // Store the token in localStorage
+
+      // Redirect to schedule-appointment page after successful login
+      navigate('/schedule-appointment');
     } catch (err) {
-      setMessage(err.response?.data?.message || "Login failed");
+      setMessage(err.response?.data?.message || "Login failed"); // Handle error
     }
   };
 

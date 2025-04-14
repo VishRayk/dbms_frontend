@@ -7,10 +7,7 @@ function Navigation() {
     { path: '/', label: 'Home' },
     { path: '/visitor-form', label: 'Visitor Form' },
     { path: '/visitor-list', label: 'Visitor List' },
-    { path: '/student-login', label: 'Student Login' },
-    { path: '/faculty-login', label: 'Faculty Login' },
-
-    { path: '/admin-login', label: 'Admin Login' },
+    { path: '/login', label: 'Login' }, // unified login page
   ];
 
   return (
