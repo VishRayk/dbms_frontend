@@ -20,12 +20,14 @@ const AdminLogin = () => {
     setMessage("");
 
     try {
+      console.log(credentials)
       const res = await axios.post("http://localhost:3000/auth/adminstaff/login", credentials);
+      console.log(res)
       setMessage(res.data.message);
-      localStorage.setItem("token", response.data.token);
-      setTimeout(() => navigate("/admin/dashboard"), 2000); // Redirect to dashboard after login
+      localStorage.setItem("token", res.data.token);
+      // setTimeout(() => navigate("/admin/dashboard"), 2000); // Redirect to dashboard after login
     } catch (err) {
-      setMessage(err.response?.data?.message || "Login failed");
+      setMessage(err.res?.data?.message || "Login failed react");
     }
   };
 

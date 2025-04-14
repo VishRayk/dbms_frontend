@@ -84,7 +84,7 @@ const AdminSignup = () => {
 
         <div className="mt-4 text-center">
           <span className="text-sm text-gray-600">Already have an account? </span>
-          <a href="/admin/login" className="text-blue-600 hover:text-blue-700">Login</a>
+          <button onClick={function (){navigate("/admin-login")}} className="text-blue-600 hover:text-blue-700">Login</button>
         </div>
       </form>
     </div>

@@ -9,7 +9,7 @@ function Navigation() {
     { path: '/visitor-list', label: 'Visitor List' },
     { path: '/student-login', label: 'Student Login' },
     { path: '/faculty-login', label: 'Faculty Login' },
-    { path: '/admin-signup', label: 'Admin Signup' },
+
     { path: '/admin-login', label: 'Admin Login' },
   ];
 
