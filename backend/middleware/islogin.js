@@ -3,10 +3,9 @@ import db from '../sql_Setup/sql_Setup.js'
 
 async function middleware(req,res, next){
     const token = req.headers.token
-
     try{
         if(!token){
-            return res.status(401).json({error: "No token provided"})
+            return res.status(401).json({error: "Please login to continue"})
         }
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         if(!decoded){
