@@ -46,7 +46,7 @@ export default function StudentSignup() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
+    <div className="flex items-center justify-center min-h-screen bg-[radial-gradient(circle,_#ff6a26,_#ff8d59)] px-4">
       <form
         className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-lg"
         onSubmit={handleSubmit}

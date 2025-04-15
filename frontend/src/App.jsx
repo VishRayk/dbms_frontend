@@ -14,6 +14,7 @@ import AdminLogin from './components/AdminLogin.jsx';
 import CombinedLogin from './components/CombinedLogin.jsx';
 import ScheduleAppointment from './components/ScheduleAppointment.jsx';
 import ScheduledAppointments from './components/ScheduledAppointments.jsx';
+import GuardLogin from './components/GuardLogin.jsx';
 
 function AppContent() {
   // Initialize default theme if not present
@@ -71,6 +72,8 @@ function AppContent() {
             <Route path="/login" element={<CombinedLogin />} />
             <Route path="/schedule-appointment" element={<ScheduleAppointment />} />
             <Route path="/scheduled-appointment" element={<ScheduledAppointments />} />
+            <Route path="/guard-login" element={<GuardLogin />} />
+
           </Routes>
         </div>
       </main>

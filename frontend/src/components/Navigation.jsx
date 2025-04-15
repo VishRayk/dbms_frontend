@@ -18,8 +18,8 @@ function Navigation() {
 
   const navItems = [
     { path: '/', label: 'Home' },
-    { path: '/visitor-form', label: 'Visitor Form' },
-    { path: '/visitor-list', label: 'Visitor List' },
+    // { path: '/visitor-form', label: 'Visitor Form' },
+    { path: '/guard-login', label: 'Guard Login' },
     // Show the 'Schedule Appointment' link only if logged in
     ...(isLoggedIn ? [{ path: '/schedule-appointment', label: 'Schedule Appointment' }] : []),
     // Show the 'Login' link only if not logged in

@@ -42,9 +42,9 @@ const studentAuth = (db)=>{
         const {sid , s_name , s_email , s_password  , branch  , phone} = req.body;
         const hashedPassword = await bcrypt.hash(s_password, 10);
 
-        const [found] = await db.query("SELECT * FROM students WHERE email = ?", [s_email]);
+        const [found] = await db.query("SELECT * FROM students WHERE email = ? OR sid = ? OR phone = ?", [s_email, sid, branch]);
         if (found[0]) {
-            return res.status(400).json({ message: "Email already exists" });
+            return res.status(400).json({ message: "Email or Enrollemnt number or phone number already exists" });
     }
         const [result] = await db.query("INSERT INTO students (sid , sname , email , password , branch , phone) VALUES (?,?,?,?,?,?)", [sid , s_name, s_email, hashedPassword, branch, phone]);
         await db.query("INSERT INTO members (member_id , member_type , email) VALUES (?,?,?)", [sid, "student", s_email]);
@@ -69,7 +69,7 @@ const studentAuth = (db)=>{
         if (!isMatch) {
             return res.status(401).json({ message: "Invalid email or password" });
         }
-        const token = jwt.sign({ id: student.id }, process.env.JWT_SECRET, { expiresIn: "24h" });
+        const token = jwt.sign({ id: student[0].sid }, process.env.JWT_SECRET, { expiresIn: "24h" });
         res.status(201).json({ message: "Logged in successfully", token });
     }
     catch(error){
