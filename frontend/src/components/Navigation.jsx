@@ -34,7 +34,7 @@ function Navigation() {
             to={path}
             className={`block px-4 py-2 rounded-lg font-medium transition-all duration-200 
               ${location.pathname === path
-                ? 'bg-blue-100 text-blue-700'
+                ? 'bg-blue-100 text-[#393086]'
                 : 'text-gray-700 hover:bg-gray-100'}`}
           >
             {label}

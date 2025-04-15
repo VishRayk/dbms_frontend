@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import StudentSignup from "./StudentSignup"; // Import the signup component
+import { useNavigate } from "react-router-dom";
+import StudentSignup from "./StudentSignup";
 
 export default function StudentLogin() {
   const [formData, setFormData] = useState({
@@ -10,8 +10,8 @@ export default function StudentLogin() {
   });
 
   const [message, setMessage] = useState("");
-  const [isSignup, setIsSignup] = useState(false); // To toggle between login and signup
-  const navigate = useNavigate(); // Initialize navigate
+  const [isSignup, setIsSignup] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -22,40 +22,36 @@ export default function StudentLogin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage(""); // Clear previous message
-    console.log("hi")
+    setMessage("");
+
     try {
       const response = await axios.post(
         "http://localhost:3000/auth/student/login",
         formData
       );
-      setMessage(response.data.message); // Show the response message
-      localStorage.setItem("token", response.data.token); // Store the token in localStorage
-      localStorage.setItem('theme', 'green-orange'); // or any custom identifier
-
-      // Redirect to schedule-appointment page after successful login
+      setMessage(response.data.message);
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem('theme', 'green-orange');
       navigate('/scheduled-appointment');
     } catch (err) {
-      setMessage(err.response?.data?.message || "Login failed"); // Handle error
+      setMessage(err.response?.data?.message || "Login failed");
     }
   };
 
   const toggleSignup = () => {
-    setIsSignup(!isSignup); // Toggle between login and signup
+    setIsSignup(!isSignup);
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[radial-gradient(circle,_#ff6a26,_#ff8d59)] px-4">
       {isSignup ? (
-        <StudentSignup /> // Render the Signup component when `isSignup` is true
+        <StudentSignup />
       ) : (
         <form
-          className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-lg"
+          className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-lg text-[#393086]"
           onSubmit={handleSubmit}
         >
-          <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">
-            Student Login
-          </h2>
+          <h2 className="text-2xl font-bold mb-6 text-center">Student Login</h2>
 
           {message && (
             <div className="mb-4 text-sm text-center text-red-600">{message}</div>
@@ -80,7 +76,7 @@ export default function StudentLogin() {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700"
+            className="w-full bg-[#393086] text-white p-3 rounded-lg hover:bg-[#2e276b]"
           >
             Login
           </button>
@@ -90,7 +86,7 @@ export default function StudentLogin() {
             <button
               type="button"
               onClick={toggleSignup}
-              className="text-blue-600 hover:underline"
+              className="text-[#393086] hover:underline"
             >
               Sign Up
             </button>

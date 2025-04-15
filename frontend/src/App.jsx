@@ -49,7 +49,7 @@ function AppContent() {
     <div className="min-h-screen flex bg-gray-100 font-sans">
       {/* Sidebar */}
       <aside className="w-64 bg-white shadow-md p-6 hidden md:block">
-        <h1 className="text-2xl font-bold text-blue-600 mb-8">Visitor Admin</h1>
+        <h1 className="text-2xl font-bold text-[#393086] mb-8">Visitor Admin</h1>
         <Navigation />
       </aside>
 

@@ -17,14 +17,14 @@ const FacultyLogin = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setMessage(""); // Clear previous messages
+    setMessage("");
 
     try {
       const res = await axios.post("http://localhost:3000/auth/faculty/login", credentials);
-      setMessage(res.data.message); // Show success message
+      setMessage(res.data.message);
       localStorage.setItem("token", res.data.token);
-      localStorage.setItem('theme', 'green-orange'); // or any custom identifier
-      setTimeout(() => navigate("/scheduled-appointment"), 1000); // Redirect after short delay
+      localStorage.setItem('theme', 'green-orange');
+      setTimeout(() => navigate("/scheduled-appointment"), 1000);
     } catch (err) {
       console.error(err);
       setMessage(err.response?.data?.message || "Login failed");
@@ -32,12 +32,12 @@ const FacultyLogin = () => {
   };
 
   return (
-    <div  className="flex items-center justify-center min-h-screen bg-[radial-gradient(circle,_#ff6a26,_#ff8d59)] px-4">
+    <div className="flex items-center justify-center min-h-screen bg-[radial-gradient(circle,_#ff6a26,_#ff8d59)] px-4">
       <form
         onSubmit={handleLogin}
-        className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-lg"
+        className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-lg text-[#393086]"
       >
-        <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">Faculty Login</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">Faculty Login</h2>
 
         {message && (
           <div className="mb-4 text-sm text-center text-red-600">{message}</div>
@@ -61,7 +61,7 @@ const FacultyLogin = () => {
         />
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700"
+          className="w-full bg-[#393086] text-white p-3 rounded-lg hover:bg-[#2e276b]"
         >
           Login
         </button>
@@ -71,7 +71,7 @@ const FacultyLogin = () => {
             Don't have an account?{" "}
             <span
               onClick={() => navigate("/faculty-signup")}
-              className="text-blue-600 cursor-pointer hover:underline"
+              className="text-[#393086] cursor-pointer hover:underline"
             >
               Sign up
             </span>
