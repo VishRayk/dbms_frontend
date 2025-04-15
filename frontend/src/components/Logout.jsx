@@ -6,8 +6,8 @@ function Logout() {
 
   useEffect(() => {
     // Clear session data
+   
     localStorage.removeItem('token');
-    localStorage.removeItem('theme');
 
     // Navigate to login page
     navigate('/login');

@@ -25,7 +25,8 @@ const AdminLogin = () => {
       console.log(res)
       setMessage(res.data.message);
       localStorage.setItem("token", res.data.token);
-      setTimeout(() => navigate("/schedule-appointment"), 1000);
+      localStorage.setItem('theme', 'green-orange'); // or any custom identifier
+      setTimeout(() => navigate("/scheduled-appointment"), 1000);
       // setTimeout(() => navigate("/admin/dashboard"), 2000); // Redirect to dashboard after login
     } catch (err) {
       setMessage(err.response?.data?.message || "Login failed react");

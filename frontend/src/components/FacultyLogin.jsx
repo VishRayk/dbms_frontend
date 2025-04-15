@@ -23,7 +23,8 @@ const FacultyLogin = () => {
       const res = await axios.post("http://localhost:3000/auth/faculty/login", credentials);
       setMessage(res.data.message); // Show success message
       localStorage.setItem("token", res.data.token);
-      setTimeout(() => navigate("/schedule-appointment"), 1000); // Redirect after short delay
+      localStorage.setItem('theme', 'green-orange'); // or any custom identifier
+      setTimeout(() => navigate("/scheduled-appointment"), 1000); // Redirect after short delay
     } catch (err) {
       console.error(err);
       setMessage(err.response?.data?.message || "Login failed");

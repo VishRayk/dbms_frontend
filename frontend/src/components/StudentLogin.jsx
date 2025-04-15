@@ -23,7 +23,7 @@ export default function StudentLogin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage(""); // Clear previous message
-
+    console.log("hi")
     try {
       const response = await axios.post(
         "http://localhost:3000/auth/student/login",
@@ -34,7 +34,7 @@ export default function StudentLogin() {
       localStorage.setItem('theme', 'green-orange'); // or any custom identifier
 
       // Redirect to schedule-appointment page after successful login
-      navigate('/schedule-appointment');
+      navigate('/scheduled-appointment');
     } catch (err) {
       setMessage(err.response?.data?.message || "Login failed"); // Handle error
     }
@@ -45,7 +45,7 @@ export default function StudentLogin() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
+    <div className="flex items-center justify-center min-h-screen bg-[radial-gradient(circle,_#ff6a26,_#ff8d59)] px-4">
       {isSignup ? (
         <StudentSignup /> // Render the Signup component when `isSignup` is true
       ) : (

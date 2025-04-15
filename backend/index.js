@@ -33,10 +33,14 @@ async function main() {
         app.use('/auth/faculty', facultyAuth(db));
         app.use('/auth/adminstaff', adminstaffAuth(db));
         
-
-        app.listen(PORT, () => {
-            console.log(`🚀 Server running on http://localhost:${PORT}`);
-        });
+        app.get('/hi',function(req,res){
+            console.log("hi");
+        })
+        const HOST = '0.0.0.0' || 'localhost';
+app.listen(3000, HOST, () => {
+  console.log(`Server running at http://${HOST}:3000`);
+});
+        
 
     } catch (error) {
         console.error("❌ Error connecting to database:", error);
