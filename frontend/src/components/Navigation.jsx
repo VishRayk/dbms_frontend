@@ -4,26 +4,19 @@ function Navigation() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Check if user is logged in by checking the token in localStorage
   const isLoggedIn = localStorage.getItem('token');
-  
+
   const handleLogout = () => {
-    // Clear the token from localStorage
     localStorage.removeItem('token');
-    localStorage.setItem('theme','#393086');
-    // setTheme('default');
-    // Redirect to the login page after logging out
+    localStorage.setItem('theme', '#393086');
     navigate('/student-login');
   };
 
   const navItems = [
-    { path: '/', label: 'Home' },
-    // { path: '/visitor-form', label: 'Visitor Form' },
-    { path: '/guard-login', label: 'Guard Login' },
-    // Show the 'Schedule Appointment' link only if logged in
-    ...(isLoggedIn ? [{ path: '/schedule-appointment', label: 'Schedule Appointment' }] : []),
-    // Show the 'Login' link only if not logged in
-    ...(isLoggedIn ? [] : [{ path: '/login', label: 'Login' }]),
+    { path: '/', label: '🏠 Home' },
+    { path: '/guard-login', label: '🛡️ Guard Login' },
+    ...(isLoggedIn ? [{ path: '/schedule-appointment', label: '📅 Schedule Appointment' },{ path: '/scheduled-appointment', label: '📅 Appointments Scheduled' }] : []),
+    ...(isLoggedIn ? [] : [{ path: '/login', label: '🔑 Login' }]),
   ];
 
   return (
@@ -32,23 +25,24 @@ function Navigation() {
         <li key={path}>
           <Link
             to={path}
-            className={`block px-4 py-2 rounded-lg font-medium transition-all duration-200 
-              ${location.pathname === path
-                ? 'bg-blue-100 text-[#393086]'
-                : 'text-gray-700 hover:bg-gray-100'}`}
+            className={`block px-5 py-3 rounded-xl font-semibold transition-all duration-200 shadow-sm
+              ${
+                location.pathname === path
+                  ? 'bg-indigo-100 text-indigo-800'
+                  : 'text-gray-700 hover:bg-gray-200 hover:text-indigo-700'
+              }`}
           >
             {label}
           </Link>
         </li>
       ))}
-      {/* Show the logout button only if logged in */}
       {isLoggedIn && (
         <li>
           <button
             onClick={handleLogout}
-            className="w-full text-red-600 hover:bg-gray-100 p-3 rounded-lg"
+            className="w-full px-5 py-3 text-left text-red-600 font-semibold hover:bg-red-100 rounded-xl transition"
           >
-            Logout
+            🚪 Logout
           </button>
         </li>
       )}

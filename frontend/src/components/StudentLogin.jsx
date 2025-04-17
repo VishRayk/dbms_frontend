@@ -10,6 +10,7 @@ export default function StudentLogin() {
   });
 
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
   const navigate = useNavigate();
 
@@ -23,6 +24,7 @@ export default function StudentLogin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
+    setIsLoading(true);
 
     try {
       const response = await axios.post(
@@ -35,6 +37,8 @@ export default function StudentLogin() {
       navigate('/scheduled-appointment');
     } catch (err) {
       setMessage(err.response?.data?.message || "Login failed");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -43,55 +47,95 @@ export default function StudentLogin() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[radial-gradient(circle,_#ff6a26,_#ff8d59)] px-4">
+    <div 
+      className="flex items-center justify-center min-h-screen px-4 py-10"
+      style={{ background: "linear-gradient(135deg, #382f86 60%, #cf5924 100%)" }}
+    >
       {isSignup ? (
         <StudentSignup />
       ) : (
-        <form
-          className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-lg text-[#393086]"
-          onSubmit={handleSubmit}
-        >
-          <h2 className="text-2xl font-bold mb-6 text-center">Student Login</h2>
-
-          {message && (
-            <div className="mb-4 text-sm text-center text-red-600">{message}</div>
-          )}
-
-          <input
-            type="email"
-            name="s_email"
-            placeholder="Email"
-            required
-            className="w-full p-3 border rounded-lg mb-3"
-            onChange={handleChange}
-          />
-          <input
-            type="password"
-            name="s_password"
-            placeholder="Password"
-            required
-            className="w-full p-3 border rounded-lg mb-6"
-            onChange={handleChange}
-          />
-
-          <button
-            type="submit"
-            className="w-full bg-[#393086] text-white p-3 rounded-lg hover:bg-[#2e276b]"
-          >
-            Login
-          </button>
-
-          <p className="mt-4 text-center">
-            Don't have an account?{" "}
-            <button
-              type="button"
-              onClick={toggleSignup}
-              className="text-[#393086] hover:underline"
+        <div className="w-full max-w-md">
+          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div className="px-6 pt-6 pb-4 text-center">
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">Student Login</h2>
+              
+              {message && (
+                <div className="mb-4 px-3 py-2 rounded-lg bg-red-50 text-red-600 text-sm">
+                  {message}
+                </div>
+              )}
+            </div>
+            
+            <form 
+              className="px-6 pb-6"
+              onSubmit={handleSubmit}
             >
-              Sign Up
-            </button>
-          </p>
-        </form>
+              <div className="mb-4">
+                <label htmlFor="s_email" className="block text-sm font-medium text-gray-700 mb-1">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  id="s_email"
+                  name="s_email"
+                  placeholder="your.email@example.com"
+                  required
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+                  onChange={handleChange}
+                  style={{ "--tw-ring-color": "#382f86" }}
+                />
+              </div>
+              
+              <div className="mb-6">
+                <div className="flex justify-between items-center mb-1">
+                  <label htmlFor="s_password" className="block text-sm font-medium text-gray-700">
+                    Password
+                  </label>
+                  <a 
+                    href="#" 
+                    className="text-sm hover:underline transition-colors"
+                    style={{ color: "#382f86" }}
+                  >
+                    Forgot password?
+                  </a>
+                </div>
+                <input
+                  type="password"
+                  id="s_password"
+                  name="s_password"
+                  placeholder="••••••••"
+                  required
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:border-blue-500 text-gray-700"
+                  onChange={handleChange}
+                  style={{ "--tw-ring-color": "#382f86" }}
+                />
+              </div>
+              
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full text-white font-medium py-3 px-4 rounded-lg hover:opacity-90 transition-all duration-200 disabled:opacity-70"
+                style={{ background: "#382f86" }}
+              >
+                {isLoading ? "Logging in..." : "Login"}
+              </button>
+              
+              <div className="mt-6 text-center">
+                <p className="text-gray-600">
+                  Don't have an account?{" "}
+                  <button
+                    type="button"
+                    onClick={toggleSignup}
+                    className="font-medium hover:underline transition-colors"
+                    style={{ color: "#cf5924" }}
+                  >
+                    Sign Up
+                  </button>
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   );
