@@ -4,7 +4,8 @@ function Navigation() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const isLoggedIn = localStorage.getItem('token');
+  const isStudentLoggedIn = localStorage.getItem('token');
+  const isGuardLoggedIn = localStorage.getItem('guardLoggedIn') === 'true';
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -12,11 +13,39 @@ function Navigation() {
     navigate('/student-login');
   };
 
+  const handleGuardLogout = () => {
+    localStorage.removeItem('guardLoggedIn');
+    navigate('/guard-login');
+  };
+
   const navItems = [
     { path: '/', label: '🏠 Home' },
-    { path: '/guard-login', label: '🛡️ Guard Login' },
-    ...(isLoggedIn ? [{ path: '/schedule-appointment', label: '📅 Schedule Appointment' },{ path: '/scheduled-appointment', label: '📅 Appointments Scheduled' }] : []),
-    ...(isLoggedIn ? [] : [{ path: '/login', label: '🔑 Login' }]),
+
+    // Show only if NOT logged in as student or guard
+    ...(!isStudentLoggedIn && !isGuardLoggedIn
+      ? [{ path: '/guard-login', label: '🛡️ Guard Login' }]
+      : []),
+
+    // Student-specific
+    ...(isStudentLoggedIn
+      ? [
+          { path: '/schedule-appointment', label: '📅 Schedule Appointment' },
+          { path: '/scheduled-appointment', label: '📅 Appointments Scheduled' },
+        ]
+      : []),
+
+    // Guard-specific
+    ...(isGuardLoggedIn
+      ? [
+          { path: '/visitor-form', label: '📝 Visitor Form' },
+          { path: '/visitor-list', label: '📋 Visitor List' },
+        ]
+      : []),
+
+    // Login link if not logged in
+    ...(!isStudentLoggedIn && !isGuardLoggedIn
+      ? [{ path: '/login', label: '🔑 Login' }]
+      : []),
   ];
 
   return (
@@ -36,13 +65,25 @@ function Navigation() {
           </Link>
         </li>
       ))}
-      {isLoggedIn && (
+
+      {isStudentLoggedIn && (
         <li>
           <button
             onClick={handleLogout}
             className="w-full px-5 py-3 text-left text-red-600 font-semibold hover:bg-red-100 rounded-xl transition"
           >
-            🚪 Logout
+            🚪 Logout (Student)
+          </button>
+        </li>
+      )}
+
+      {isGuardLoggedIn && (
+        <li>
+          <button
+            onClick={handleGuardLogout}
+            className="w-full px-5 py-3 text-left text-red-600 font-semibold hover:bg-red-100 rounded-xl transition"
+          >
+            🚪 Logout (Guard)
           </button>
         </li>
       )}

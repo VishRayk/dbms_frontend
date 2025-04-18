@@ -43,7 +43,7 @@ export default function StudentLogin() {
   };
 
   const toggleSignup = () => {
-    setIsSignup(!isSignup);
+    navigate("/student-signup");
   };
 
   return (

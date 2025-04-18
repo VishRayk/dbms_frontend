@@ -37,7 +37,8 @@ const FacultyLogin = () => {
   };
 
   const toggleSignup = () => {
-    setIsSignup(!isSignup); // Toggle between login and signup forms
+    navigate("/faculty-signup");
+    // setIsSignup(!isSignup); // Toggle between login and signup forms
   };
 
   return (

@@ -37,6 +37,7 @@ const AdminLogin = () => {
   };
 
   const toggleSignup = () => {
+    navigate("/admin-signup");
     setIsSignup(!isSignup);
   };
 

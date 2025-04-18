@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import './App.css';
+import collegeLogo from './assets/college-logo.svg'; // adjust path if needed
+import { Link } from 'react-router-dom';
 
 import VisitorForm from './components/VisitorForm.jsx';
 import VisitorList from './components/VisitorList.jsx';
@@ -55,6 +57,15 @@ function AppContent() {
       {/* Sidebar */}
       <aside className={`${isNavOpen ? 'w-64' : 'w-0'} bg-white shadow-md transition-all duration-300 overflow-hidden`}>
         <div className="p-6">
+          <div className="flex justify-center mb-4">
+          <Link to="/">
+            <img
+              src={collegeLogo}
+              alt="College Logo"
+              className="h-16 w-auto object-contain"
+            />
+             </Link>
+          </div>
           <h1 className="text-2xl font-bold text-[#393086] mb-8">Visitor Admin</h1>
           <Navigation />
         </div>
