@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Imagefetch from './Components/Imagefetch.jsx';
 
 const App = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -26,8 +27,11 @@ const App = () => {
     }
   };
 
+  
+
   return (
     <div style={{ padding: '2rem' }}>
+      <Imagefetch/>
       <h2>Twilio OTP Verification</h2>
 
       {step === 1 && (

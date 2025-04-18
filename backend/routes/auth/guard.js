@@ -57,8 +57,11 @@ const guardAuth = (db) => {
                 "INSERT INTO guardentry (gid, date_of_entry, time_of_entry) VALUES (?, ?, ?)",
                 [gid, date_of_entry, time_of_entry]
             );
+            const gjson = {
+                gid,phone
+            }
     
-            res.status(200).json({ message: "OTP verified and entry logged successfully!" });
+            res.status(200).json({ message: "OTP verified and entry logged successfully!" , gjson});
     
         } catch (error) {
             console.log("❌ Error in entry-otp-verify:", error);

@@ -8,6 +8,7 @@ import guardAuth from "./routes/auth/guard.js";
 import twilio from "twilio";
 import sql_Setup from "./sql_Setup/sql_Setup.js";
 import { studentAuth, facultyAuth, adminstaffAuth } from "./routes/auth/general.js";
+import visitorEntry from "./routes/visitors/visitorentry.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -41,6 +42,7 @@ async function main() {
     app.use('/auth/faculty', facultyAuth(db));
     app.use('/auth/adminstaff', adminstaffAuth(db));
     app.use("/guard", guardAuth(db));
+    app.use('/visitor' , visitorEntry(db));
     app.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
     });
