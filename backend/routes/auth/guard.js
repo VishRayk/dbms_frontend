@@ -52,7 +52,7 @@ const guardAuth = (db) => {
             const currentDate = new Date();
             const date_of_entry = currentDate.toISOString().slice(0, 10); // YYYY-MM-DD
             const time_of_entry = currentDate.toTimeString().slice(0, 8); // HH:MM:SS
-    
+            
             await db.query(
                 "INSERT INTO guardentry (gid, date_of_entry, time_of_entry) VALUES (?, ?, ?)",
                 [gid, date_of_entry, time_of_entry]

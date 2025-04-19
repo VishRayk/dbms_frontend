@@ -17,6 +17,7 @@ const allowedPhoneNumbers = [
     "+911111111111",
     "+911111111112",  
     "+1112233445",  
+    "+919876257236"
   ];
 
 export async function sendOtp(phoneNumber){
