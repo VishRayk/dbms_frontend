@@ -17,6 +17,7 @@ import CombinedLogin from './components/CombinedLogin.jsx';
 import ScheduleAppointment from './components/ScheduleAppointment.jsx';
 import ScheduledAppointments from './components/ScheduledAppointments.jsx';
 import GuardLogin from './components/GuardLogin.jsx';
+import ImageFetch from './components/Imagefetch.jsx';
 
 function AppContent() {
   const location = useLocation();
@@ -114,6 +115,7 @@ function AppContent() {
               <Route path="/schedule-appointment" element={<ScheduleAppointment />} />
               <Route path="/scheduled-appointment" element={<ScheduledAppointments />} />
               <Route path="/guard-login" element={<GuardLogin />} />
+              <Route path="/image-fetch" element={<ImageFetch/>}/>
             </Routes>
           </div>
         </div>
