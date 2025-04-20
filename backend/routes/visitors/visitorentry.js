@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { middleware } from '../../middleware/islogin.js';
+import { middleware ,guardmiddleware } from '../../middleware/islogin.js';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -43,7 +43,29 @@ const visitorEntry = (db) => {
             });
         }
     });
-
+    router.post("/ai-image-post", async (req, res) => {
+      const { visitorId } = req.body;
+      try {
+        const imageUrl = `http://localhost:3000/visitor_images/${visitorId}.jpg`;
+        const pictureUrlForDB = `/uploads/visitor_images/${visitorId}.jpg`; 
+        
+        await db.query(
+          "UPDATE visitors SET imgverification = ? WHERE visid = ?",
+          [imageUrl, visitorId]
+        );
+    
+        await db.query(
+          "INSERT INTO visitor_photos (visid, picture_url, uploaded_at) VALUES (?, ?, NOW())",
+          [visitorId, pictureUrlForDB]
+        );
+    
+        res.status(200).json({ success: true, message: "Image URL updated and photo record inserted successfully." });
+      } catch (error) {
+        console.error("Error updating image info:", error);
+        res.status(500).json({ success: false, message: "Failed to update image info." });
+      }
+    });
+    
     router.post("/post_image", async (req, res) => {
         const { visitorId, image } = req.body;
 
@@ -130,7 +152,7 @@ const visitorEntry = (db) => {
       // 3. Get Scheduled Visitors (from appointments table)
       router.get('/scheduled', async (req, res) => {
         try {
-          const [rows] = await db.query("SELECT * FROM appointments WHERE appointment_date >= CURDATE() AND status = 'scheduled'");
+          const [rows] = await db.query("SELECT * FROM appointments WHERE appointment_date >= CURDATE() AND status = 'not accepted'");
           res.status(200).json({ visitors: rows });
         } catch (err) {
           console.error("Error fetching scheduled visitors:", err);

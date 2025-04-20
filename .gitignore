@@ -3,3 +3,4 @@ node_modules
 firebase.json
 __pycache__
 myenv
+uploads

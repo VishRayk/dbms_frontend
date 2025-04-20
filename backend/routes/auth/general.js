@@ -119,7 +119,7 @@ const facultyAuth = (db)=>{
         if (!isMatch) {
             return res.status(401).json({ message: "Invalid email or password" });
         }
-        const token = jwt.sign({ id: faculty[0].id }, process.env.JWT_SECRET, { expiresIn: "24h" });
+        const token = jwt.sign({ id: faculty[0].fid }, process.env.JWT_SECRET, { expiresIn: "24h" });
         res.status(201).json({ message: "Logged in successfully", token });
     }
     catch(error){
@@ -186,7 +186,7 @@ const adminstaffAuth = (db) => {
                 return res.status(401).json({ message: "Invalid email or password" });
             }
 
-            const token = jwt.sign({ wid: admin[0].wid }, process.env.JWT_SECRET, { expiresIn: "24h" });
+            const token = jwt.sign({ id: admin[0].wid }, process.env.JWT_SECRET, { expiresIn: "24h" });
 
             res.status(201).json({ message: "Logged in successfully", token });
         } catch (error) {

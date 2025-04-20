@@ -1,23 +1,31 @@
+import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function ImageFetch({ visitorId }) {
   const [isCapturing, setIsCapturing] = useState(false);
   const [imageData, setImageData] = useState(null);
+  const [detectedImagePath, setDetectedImagePath] = useState(null); // AI-detected image path
   const canvasRef = useRef(null);
   const videoRef = useRef(null);
-  const streamRef = useRef(null); // To store the video stream for cleanup
-  const navigate = useNavigate(); // Initialize the navigate function
+  const streamRef = useRef(null);
+  const navigate = useNavigate();
+  const [ai, setai] = useState(false)
 
+  function getImagePathById(id) {
+    const folderPath = '../../../backend/uploads/visitor_images'; // or '/images/' depending on setup
+    const fileName = `${id}.jpg`;
+    const fullPath = `${folderPath}/${fileName}`;
+    return fullPath;
+  }
   useEffect(() => {
     if (isCapturing) {
-      // Start capturing the video stream
       navigator.mediaDevices
         .getUserMedia({ video: true })
         .then((stream) => {
           videoRef.current.srcObject = stream;
           videoRef.current.play();
-          streamRef.current = stream; // Save stream for cleanup
+          streamRef.current = stream;
         })
         .catch((err) => {
           console.error('Error accessing camera: ', err);
@@ -34,39 +42,52 @@ export default function ImageFetch({ visitorId }) {
   }, [isCapturing]);
 
   const captureImage = () => {
-    console.log("Capture started");
-
+    setai(false)
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
     const video = videoRef.current;
 
-    // Set canvas size to match video size
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-
-    // Draw the current frame from the video feed onto the canvas
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // Get the base64 image data
     const capturedImage = canvas.toDataURL('image/jpeg');
-    console.log(capturedImage);
+    setImageData(capturedImage);
 
-    setImageData(capturedImage);  // Store the base64 image data
-
-    // Stop the video stream (turn off the camera)
     const stream = streamRef.current;
     if (stream) {
       const tracks = stream.getTracks();
       tracks.forEach((track) => track.stop());
     }
 
-    // Disable capturing mode
     setIsCapturing(false);
   };
 
   const uploadImage = async () => {
-    if (!imageData) {
-      alert("No image captured!");
+    if (ai) {
+      try {
+        const response = await axios.post("http://localhost:3000/visitor/ai-image-post", {
+          visitorId: visitorId
+        });
+  
+        console.log("AI Image Post Response:", response.data);
+  
+        if (response.data.success) {
+          alert("AI-generated image info posted successfully!");
+        } else {
+          alert(response.data.message || "Failed to post AI-generated image.");
+        }
+      } catch (error) {
+        console.error("Error posting AI-generated image:", error);
+        alert("Error posting AI-generated image.");
+      }
+      return
+    }
+  
+    const imageToUpload = detectedImagePath ? detectedImagePath : imageData;
+    console.log(imageToUpload);
+    if (!imageToUpload) {
+      alert("No image to upload!");
       return;
     }
   
@@ -76,7 +97,7 @@ export default function ImageFetch({ visitorId }) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ visitorId, image: imageData })
+        body: JSON.stringify({ visitorId, image: imageToUpload })
       });
   
       const resData = await response.json();
@@ -84,7 +105,7 @@ export default function ImageFetch({ visitorId }) {
   
       if (response.ok) {
         alert('Image uploaded successfully!');
-        navigate('/visitor-list'); // Redirect to the visitor entry form after successful upload
+        navigate('/visitor-list');
       } else {
         alert(resData.message || 'Failed to upload image');
       }
@@ -93,6 +114,35 @@ export default function ImageFetch({ visitorId }) {
       alert('Error uploading image');
     }
   };
+  
+  const aiImage = async () => {
+    try {
+      setai(true)
+      const response = await axios.post("http://localhost:5000/detect-faces", {
+        visitorId: visitorId,
+      });
+  
+      if (response.data.status === "success") {
+        const fullImageURL = `http://localhost:5000/${response.data.image_path}`;
+        setDetectedImagePath(fullImageURL);
+        alert("Visitor image captured using AI!");
+        
+      } else {
+        alert(response.data.message || "Image detection failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error during face detection:", error);
+      if (error.response) {
+        alert(error.response.data.message || "Server error during image detection.");
+      } else if (error.request) {
+        alert("No response from the server. Please check if the Python server is running.");
+      } else {
+        alert("Something went wrong while trying to detect face.");
+      }
+    }
+  };
+  
+  
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg space-y-4">
@@ -103,29 +153,39 @@ export default function ImageFetch({ visitorId }) {
         <canvas ref={canvasRef} className="w-full h-72 border border-gray-300" style={{ display: isCapturing ? 'none' : 'block' }}></canvas>
       </div>
 
-      {/* Capture Button */}
-      <div className="flex justify-center space-x-4 mt-4">
+      {detectedImagePath && (
+        <div className="text-center">
+          <h3 className="text-lg font-medium mt-4">AI Detected Image Preview:</h3>
+          <img src={detectedImagePath} alt="Detected Face" className="mx-auto mt-2 w-64 border rounded" />
+        </div>
+      )}
+
+      <div className="flex flex-col space-y-4 mt-4">
         {!isCapturing ? (
           <button
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+            className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
             onClick={() => setIsCapturing(true)}
           >
             Start Camera
           </button>
         ) : (
           <button
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+            className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
             onClick={captureImage}
           >
             Capture Image
           </button>
         )}
-      </div>
 
-      {/* Upload Button */}
-      <div className="flex justify-center space-x-4 mt-4">
         <button
-          className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition"
+          className="bg-purple-600 text-white py-2 rounded hover:bg-purple-700 transition"
+          onClick={aiImage}
+        >
+          Use AI Camera
+        </button>
+
+        <button
+          className="bg-green-600 text-white py-2 rounded hover:bg-green-700 transition"
           onClick={uploadImage}
         >
           Upload Image

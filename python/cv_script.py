@@ -30,7 +30,7 @@ def detect_faces_realtime(id):
             elif not saved and (time.time() - face_detected_time >= 3):
                 for (x, y, w, h) in faces:
                     face_img = frame[y:y + h, x:x + w]
-                    image_path = f"raw_captures_faces/{id}.jpg"
+                    image_path = f"../backend/uploads/visitor_images/{id}.jpg"
                     cv2.imwrite(image_path, face_img)
                     print(f"Saved: {image_path}")
                     saved = True

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import axios from "axios"
 export default function VisitorList() {
   const [visitors, setVisitors] = useState([]);
   const [filter, setFilter] = useState("current");
@@ -68,28 +68,30 @@ export default function VisitorList() {
       alert("Invalid appointment ID");
       return;
     }
-
+  
     try {
-      const response = await fetch("http://localhost:3000/appointments/accept-appointment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" ,token:token},
-        body: JSON.stringify({ appointment_id: appointmentId }),
-      });
-      console.log("h");
-      const data = await response.json();
-      
-      if (response.ok) {
-        alert("Appointment accepted and visitor added!");
-        fetchVisitors();
-      } else {
-        alert(data.message || "Failed to accept appointment");
-      }
+      const response = await axios.post(
+        "http://localhost:3000/appointments/accept-appointment",
+        { appointment_id: appointmentId },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            token: token,
+          },
+        }
+      );
+  
+      alert("Appointment accepted and visitor added!");
+      fetchVisitors(); // refresh list
     } catch (err) {
       console.error("Error accepting appointment:", err);
-      alert("Server error accepting appointment");
+      if (err.response && err.response.data && err.response.data.message) {
+        alert(err.response.data.message);
+      } else {
+        alert("Server error accepting appointment");
+      }
     }
   };
-
   return (
     <div className="relative min-h-screen flex items-center justify-center p-4 md:p-8">
       <div className="absolute inset-0 bg-gradient-to-br from-[#393086] to-[#cf5924]"></div>

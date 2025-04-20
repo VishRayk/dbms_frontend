@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const DEV_MODE = true; // Set to false before deploying
+const DEV_MODE = false; // Set to false before deploying
 
 function GuardLogin() {
   const [gid, setGid] = useState("");
